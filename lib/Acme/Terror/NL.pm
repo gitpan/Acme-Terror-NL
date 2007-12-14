@@ -4,7 +4,7 @@ use constant 1.01;
 use LWP::Simple;
 
 use vars qw($VERSION);
-$VERSION = '0.02';
+$VERSION = '0.03';
 
 use constant {
    UNKNOWN        => 0,
@@ -27,7 +27,7 @@ sub fetch {
    my $self = shift;
    my $uri  = 'http://english.nctb.nl/';
    my $html = get($uri);
-   if($html =~ /href="[^"]+current_threat_[^"]+"[^>]+>([^<]+)<\/a><\/str/) {
+   if($html =~ m!href=".+?Current_threat_level.+?"[^>]+>\s*(MINIMAL|LIMITED|SUBSTANTIAL|CRITICAL)</a>!s){
       my $lvl = $1;
       if($constant::declared{__PACKAGE__."::".$lvl}) {
          $self->{_level} = eval $lvl;
